@@ -50,6 +50,12 @@ namespace BlockchainLib
             return document;
         }
 
+        public void printRawBlock(int index)
+        {
+            Console.WriteLine("--START--");
+            Console.WriteLine($"Index: {chain[index].Index}\nTimestamp: {chain[index].Timestamp}\nDiff: {chain[index].Diff}\nPreviousHash: {chain[index].PreviousHash}\nHash: {chain[index].Hash}");
+            Console.WriteLine("--STOP--");
+        }
 
         public void AddNewVersion(string document)
         {
@@ -91,7 +97,6 @@ namespace BlockchainLib
 
             return result.ToString();
         }
-
 
         private string CalculateDiff(string oldDocument, string newDocument)
         {
