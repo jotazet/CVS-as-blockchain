@@ -81,8 +81,15 @@ class Program
                 // Save not implemented yet
                 case "s":
                 case "save":
-                    Console.WriteLine(blockchain.getEntireBlockchain());
-                    Console.WriteLine("File saved");
+                    var mainFolder = Path.Combine(Directory.GetCurrentDirectory(), "saves");
+                    Directory.CreateDirectory(mainFolder);
+
+                    var fileName = Path.GetFileName(file) + ".block";
+                    var savePath = Path.Combine(mainFolder, fileName);
+
+                    File.WriteAllText(savePath, blockchain.getEntireBlockchain());
+                    Console.WriteLine($"Blockchain saved to: {savePath}");
+
                     break;
                 case "c":
                 case "clear":

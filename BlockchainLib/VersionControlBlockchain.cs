@@ -56,7 +56,7 @@ namespace BlockchainLib
             var blockchain = string.Empty; 
             foreach (var block in chain)
             {
-                blockchain += $"Index: {block.Index}\nTimestamp: {block.Timestamp}\nDiff: {block.Diff}\nPreviousHash: {block.PreviousHash}\nHash: {block.Hash}";
+                blockchain += $"Index: {block.Index}\nTimestamp: {block.Timestamp}\nDiff: {block.Diff}\nPreviousHash: {block.PreviousHash}\nHash: {block.Hash}\n";
             }
             return blockchain;
         }
