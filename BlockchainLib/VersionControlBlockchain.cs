@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace BlockchainLib
 {
@@ -50,22 +51,29 @@ namespace BlockchainLib
             return document;
         }
 
+        public string getEntireBlockchain()
+        {
+            var blockchain = string.Empty; 
+            foreach (var block in chain)
+            {
+                blockchain += $"Index: {block.Index}\nTimestamp: {block.Timestamp}\nDiff: {block.Diff}\nPreviousHash: {block.PreviousHash}\nHash: {block.Hash}";
+            }
+            return blockchain;
+        }
         public void printRawBlock(int index)
         {
             Console.WriteLine("--START--");
             Console.WriteLine($"Index: {chain[index].Index}\nTimestamp: {chain[index].Timestamp}\nDiff: {chain[index].Diff}\nPreviousHash: {chain[index].PreviousHash}\nHash: {chain[index].Hash}");
             Console.WriteLine("--STOP--");
         }
-
         public void AddNewVersion(string document)
         {
             string previousDocument = GetDocumentVersion(chain.Count - 1);
             string diff = CalculateDiff(previousDocument, document);
-
             DocumentVersion newVersion = new DocumentVersion(
-                chain.Count,
-                DateTime.Now,
-                diff,
+            chain.Count,
+            DateTime.Now,
+            diff,
                 GetLatestVersionBlock()
             );
 
