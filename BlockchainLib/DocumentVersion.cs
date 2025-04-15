@@ -4,11 +4,11 @@ namespace BlockchainLib
 {
     public class DocumentVersion
     {
-        private readonly int index;
-        private readonly DateTime timestamp;
-        private readonly string diff;
-        private readonly string previous_hash;
-        private readonly string hash;
+        private int index;
+        private DateTime timestamp;
+        private string diff;
+        private string previous_hash;
+        private string hash;
 
         public int Index => index;
         public DateTime Timestamp => timestamp;

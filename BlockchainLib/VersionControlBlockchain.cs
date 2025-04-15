@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace BlockchainLib
 {
     public class VersionControlBlockchain
     {
         private List<DocumentVersion> chain = new List<DocumentVersion>();
+
         public VersionControlBlockchain(string init)
         {
             CreateGenesisBlock(init);
@@ -51,29 +54,49 @@ namespace BlockchainLib
             return document;
         }
 
-        public string getEntireBlockchain()
+        public string GetBlockchainJson()
         {
-            var blockchain = string.Empty; 
-            foreach (var block in chain)
-            {
-                blockchain += $"Index: {block.Index}\nTimestamp: {block.Timestamp}\nDiff: {block.Diff}\nPreviousHash: {block.PreviousHash}\nHash: {block.Hash}\n";
-            }
-            return blockchain;
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(chain, options);
+            return json;
         }
-        public void printRawBlock(int index)
+
+        public void LoadBlochchainJson(string content)
+        {
+            using (JsonDocument document = JsonDocument.Parse(content))
+            {
+                chain.Clear();
+
+                foreach (JsonElement element in document.RootElement.EnumerateArray())
+                {
+                    int index = element.GetProperty("Index").GetInt32();
+                    DateTime timestamp = element.GetProperty("Timestamp").GetDateTime();
+                    string diff = element.GetProperty("Diff").GetString();
+                    string previousHash = element.GetProperty("PreviousHash").GetString();
+                    string hash = element.GetProperty("Hash").GetString();
+
+                    DocumentVersion block = new DocumentVersion(index, timestamp, diff, previousHash);
+                    chain.Add(block);
+                }
+                
+            }
+        }
+
+        public void PrintRawBlock(int index)
         {
             Console.WriteLine("--START--");
             Console.WriteLine($"Index: {chain[index].Index}\nTimestamp: {chain[index].Timestamp}\nDiff: {chain[index].Diff}\nPreviousHash: {chain[index].PreviousHash}\nHash: {chain[index].Hash}");
             Console.WriteLine("--STOP--");
         }
+
         public void AddNewVersion(string document)
         {
             string previousDocument = GetDocumentVersion(chain.Count - 1);
             string diff = CalculateDiff(previousDocument, document);
             DocumentVersion newVersion = new DocumentVersion(
-            chain.Count,
-            DateTime.Now,
-            diff,
+                chain.Count,
+                DateTime.Now,
+                diff,
                 GetLatestVersionBlock()
             );
 
@@ -131,5 +154,7 @@ namespace BlockchainLib
 
             return diff.ToString();
         }
+
+        public void 
     }
 }
