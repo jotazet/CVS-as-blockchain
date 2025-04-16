@@ -43,7 +43,11 @@ namespace BlockchainLib
 
         public string GetDocumentVersion(int index)
         {
-            if (index < 0 || index >= chain.Count)
+            if (index == -1)
+            {
+                index = chain.Count - 1;
+            } 
+            else if (index < 0 || index >= chain.Count)
                 throw new ArgumentOutOfRangeException(nameof(index), "Invalid version index.");
 
             string document = chain[0].Diff;
