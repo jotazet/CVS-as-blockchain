@@ -154,7 +154,5 @@ namespace BlockchainLib
 
             return diff.ToString();
         }
-
-        public void 
     }
 }
