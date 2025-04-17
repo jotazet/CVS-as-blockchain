@@ -47,7 +47,7 @@ class Program
                 case "a":
                 case "add":
                     Console.WriteLine("Text file path: ");
-                    var fileDir = Console.ReadLine();
+                    var fileDir = GetSaftyPathInput();
                     fileName = Path.GetFileName(fileDir);
                     filePath = Path.GetDirectoryName(fileDir);
 
@@ -68,7 +68,7 @@ class Program
                     if (fileName != "")
                     {
                         Console.WriteLine($"Save {fileName} in: ");
-                        filePath = Console.ReadLine();
+                        filePath = GetSaftyPathInput();
                         var saveLocalization = Path.Combine(filePath, fileName);
                         File.WriteAllText(saveLocalization, blockchain.GetDocumentVersion(-1));
                         Console.WriteLine($"File saved to: {saveLocalization}");
@@ -108,9 +108,6 @@ class Program
 
                 case "s":
                 case "save":
-                    // Remove vulnerability Path Traversal (../../)
-                    // Insted using Console.ReadLine write new function
-
                     var mainFolder = Path.Combine(Directory.GetCurrentDirectory(), "saves");
                     Directory.CreateDirectory(mainFolder);
 
@@ -122,7 +119,7 @@ class Program
                         Console.WriteLine($"A file named '{Path.GetFileNameWithoutExtension(saveFileName)}' already exists.\nEnter a new name or press Enter to overwrite:");
                         while (true)
                         {
-                            var newFileName = Console.ReadLine();
+                            var newFileName = GetSaftyFileNameInput();
 
                             if (string.IsNullOrWhiteSpace(newFileName))
                             {
@@ -207,6 +204,32 @@ class Program
                     Console.WriteLine("Command do not found");
                     break;
             }
+        }
+
+        string GetSaftyFileNameInput()
+        {
+            string input = Console.ReadLine();
+
+            if (input.Contains("..") || input.Contains("/") || input.Contains("//") || input.Contains("\\") || input.Contains("//"))
+            {
+                Console.WriteLine("Invalid input detected. Please try again:");
+                return GetSaftyFileNameInput();
+            }
+
+            return input;
+        }
+
+        string GetSaftyPathInput()
+        {
+            string input = Console.ReadLine();
+
+            if (input.Contains(".."))
+            {
+                Console.WriteLine("Invalid input detected. Please try again:");
+                return GetSaftyPathInput();
+            }
+
+            return input;
         }
     }
 }
